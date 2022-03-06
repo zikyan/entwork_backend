@@ -1,21 +1,21 @@
 import express from "express";
-import { getRequest } from "../Controllers/postController.js";
+import { getRequest, postRequest, updateRequest, deleteRequest } from "../controllers/postController.js";
+import { registerUser, loginUser, getMe } from "../controllers/userController.js";
+import {protect} from "../middleware/authMiddleware.js";
 
 const route=express.Router();
 
-route.get('/',getRequest);
+// Post Controller Routes
 
-route.post('/',(req,res)=>{
-    res.status(200).json({message:'post request'});
-});
+route.get('/post/get', protect, getRequest);
+route.post('/post/create', protect, postRequest);
+route.put('/post/update/:id', protect, updateRequest);
+route.delete('/post/delete/:id', protect, deleteRequest);
+route.get('/me', protect, getMe);
 
-route.put('/:id',(req,res)=>{
-    res.status(200).json({message:`update ${req.params.id}`});
-});
+// User Controller Routes
 
-route.delete('/:id',(req,res)=>{
-    res.status(200).json({message:`delete ${req.params.id}`});
-});
-
+route.post('/user/register',registerUser);
+route.post('/user/login',loginUser);
 
 export default route;
