@@ -15,7 +15,7 @@ route.get('/me', protect, getMe);
 
 // User Controller Routes
 
-route.post('/user/register',registerUser);
-route.post('/user/login',loginUser);
+route.post('/users/register',registerUser);
+route.post('/users/login',loginUser);
 
 export default route;
