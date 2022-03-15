@@ -1,11 +1,19 @@
 import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
 
-export const getRequest = async (req,res)=>{
+export const getAllPost = async (req,res)=>{
     try {
-        const post = await Post.find({
-            user:req.user.id
-        });
+        const post = await Post.find();
+        // post.map((zik)=>{
+        //     const user = User.find();
+        //     console.log(user)
+        // })
+
+        
+        // await Promise.all(post.map(zik=>{
+        //     const user=User.findById(zik.user)
+        //     console.log(user)
+        // }))
         res.status(200).json(post);
     } catch (error) {
         res.status(400).json(error.message);
@@ -31,14 +39,13 @@ export const updateRequest = async (req, res)=>{
             res.status(401).json("Post not found");
         }
 
-        const user = await User.findById(req.user.id);
-        if(!user){
+        if(!req.user){
             res.status(401).json("User not found");
         }
 
         // check for only those users update whose has posted that post
 
-        if(post.user.toString() !== user.id){
+        if(post.user.toString() !== req.user.id){
             res.status(401).json("User not authorized");
         }
 
@@ -56,14 +63,13 @@ export const deleteRequest = async (req,res)=>{
             res.status(401).json("Post not found");
         }
 
-        const user = await User.findById(req.user.id);
-        if(!user){
+        if(!req.user){
             res.status(401).json("User not found");
         }
 
         // check for only those users update whose has posted that post
 
-        if(post.user.toString() !== user.id){
+        if(post.user.toString() !== req.user.id){
             res.status(401).json("User not authorized");
         }
 
