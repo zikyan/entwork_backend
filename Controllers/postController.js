@@ -4,16 +4,6 @@ import User from '../models/userModel.js';
 export const getAllPost = async (req,res)=>{
     try {
         const post = await Post.find();
-        // post.map((zik)=>{
-        //     const user = User.find();
-        //     console.log(user)
-        // })
-
-        
-        // await Promise.all(post.map(zik=>{
-        //     const user=User.findById(zik.user)
-        //     console.log(user)
-        // }))
         res.status(200).json(post);
     } catch (error) {
         res.status(400).json(error.message);
@@ -79,4 +69,19 @@ export const deleteRequest = async (req,res)=>{
     } catch (error) {
         res.status(400).json(error.message);
     }
+}
+
+export const timelinePosts = async (req,res)=>{
+    try {
+        const currentUser = await User.findById(req.params.user);
+        const userPosts = await Post.find({ user: currentUser._id });
+        const friendPosts = await Promise.all(
+          currentUser.followings.map((friendId) => {
+            return Post.find({ user: friendId });
+          })
+        );
+        res.status(200).json(userPosts.concat(...friendPosts));
+      } catch (err) {
+        res.status(500).json(err);
+      }
 }

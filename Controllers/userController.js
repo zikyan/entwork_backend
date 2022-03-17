@@ -70,15 +70,31 @@ export const loginUser = async (req,res) =>{
 
 export const getUserById = async (req,res)=>{
     try {
-        const user = await User.findById(req.params.user);
-        res.status(200).json(user);
+        const getUser = await User.findById(req.params.id);
+        res.status(200).json(getUser);
     } catch (error) {
-        res.status(500).json('Error : ',error.message);
+        res.status(500).json(err);
     }
 }
 
-export const getMe = (req, res) => {
-    res.status(200).json("Protected Route Displayed");
+export const followUser = async (req,res)=>{
+    if (req.body.user !== req.params.id) {
+        try {
+          const user = await User.findById(req.params.id);
+          const currentUser = await User.findById(req.body.user);
+          if (!user.followers.includes(req.body.user)) {
+            await user.updateOne({ $push: { followers: req.body.user } });
+            await currentUser.updateOne({ $push: { followings: req.params.id } });
+            res.status(200).json("user has been followed");
+          } else {
+            res.status(403).json("you allready follow this user");
+          }
+        } catch (err) {
+          res.status(500).json(err);
+        }
+      } else {
+        res.status(403).json("you cant follow yourself");
+      }
 }
 
 const generateToken = (id)=>{
