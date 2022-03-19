@@ -4,9 +4,9 @@ import User from "../models/userModel.js";
 
 
 export const registerUser = async (req,res)=>{
-    const {username, email, password}=req.body;
+    const {first, last, username, email, password}=req.body;
     try {
-        if(!username || !email || !password){
+        if(!first || !last || !username || !email || !password){
             res.status(400).send("Please enter all fields");
         }
 
@@ -26,6 +26,8 @@ export const registerUser = async (req,res)=>{
         // Create User
 
         const newUser = await new User({
+            first,
+            last,
             username,
             email,
             password: hashedPassword
@@ -36,6 +38,8 @@ export const registerUser = async (req,res)=>{
         if(newUser){
             res.status(201).json({
                 _id: newUser.id,
+                first: newUser.first,
+                last: newUser.last,
                 username: newUser.username,
                 email: newUser.email,
                 token: generateToken(newUser._id)
@@ -56,6 +60,8 @@ export const loginUser = async (req,res) =>{
         if(user && await bcrypt.compare(password, user.password)){
             res.status(201).json({
                 _id: user.id,
+                first: user.first,
+                last: user.last,
                 username: user.username,
                 email: user.email,
                 token: generateToken(user._id)
@@ -73,7 +79,7 @@ export const getUserById = async (req,res)=>{
         const getUser = await User.findById(req.params.id);
         res.status(200).json(getUser);
     } catch (error) {
-        res.status(500).json(err);
+        res.status(500).json(error);
     }
 }
 
@@ -95,6 +101,15 @@ export const followUser = async (req,res)=>{
       } else {
         res.status(403).json("you cant follow yourself");
       }
+}
+
+export const getUserByUsername = async (req,res)=>{
+    try {
+        const user = await User.findOne({username:req.params.username})
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json(error)
+    }
 }
 
 const generateToken = (id)=>{

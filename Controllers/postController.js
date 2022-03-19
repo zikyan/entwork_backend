@@ -1,6 +1,17 @@
 import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
 
+export const createPost = async (req,res)=>{
+    try {
+        const newPost = await new Post(req.body)
+        await newPost.save()
+        res.status(200).json(newPost)
+    } catch (error) {
+        
+    }
+}
+
+
 export const getAllPost = async (req,res)=>{
     try {
         const post = await Post.find();
@@ -84,4 +95,22 @@ export const timelinePosts = async (req,res)=>{
       } catch (err) {
         res.status(500).json(err);
       }
+}
+
+export const getPostById = async (req,res)=>{
+    try {
+        const posts = await Post.find({user:req.params.id})
+        res.status(200).json(posts)
+    } catch (error) {
+        res.status(500).json(err);
+    }
+}
+
+export const getPostByIdOne = async (req,res)=>{
+    try {
+        const post = await Post.findById(req.params.id)
+        res.status(200).json(post)
+    } catch (error) {
+        res.status(500).json(error);
+    }
 }
