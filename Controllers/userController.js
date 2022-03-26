@@ -42,7 +42,12 @@ export const registerUser = async (req,res)=>{
                 last: newUser.last,
                 username: newUser.username,
                 email: newUser.email,
-                token: generateToken(newUser._id)
+                token: generateToken(newUser._id),
+                followings: newUser.followings,
+                followers: newUser.followers,
+                profilePicture: newUser.profilePicture,
+                coverPicture: newUser.coverPicture,
+                isAdmin: newUser.isAdmin
             });
         }else{
             res.status(400).send("Invalid Data");
@@ -64,7 +69,12 @@ export const loginUser = async (req,res) =>{
                 last: user.last,
                 username: user.username,
                 email: user.email,
-                token: generateToken(user._id)
+                token: generateToken(user._id),
+                followings: user.followings,
+                followers: user.followers,
+                profilePicture: user.profilePicture,
+                coverPicture: user.coverPicture,
+                isAdmin: user.isAdmin
             });
         }else{
             res.status(400).send("Wrong Credentials");
@@ -91,15 +101,35 @@ export const followUser = async (req,res)=>{
           if (!user.followers.includes(req.body.user)) {
             await user.updateOne({ $push: { followers: req.body.user } });
             await currentUser.updateOne({ $push: { followings: req.params.id } });
-            res.status(200).json("user has been followed");
+            res.status(200).json("User Has Been Followed");
           } else {
-            res.status(403).json("you allready follow this user");
+            res.status(403).json("You Already Follow This User");
           }
         } catch (err) {
           res.status(500).json(err);
         }
       } else {
-        res.status(403).json("you cant follow yourself");
+        res.status(403).json("You Can't Follow Yourself");
+      }
+}
+
+export const unfollowUser = async (req,res)=>{
+    if (req.body.user !== req.params.id) {
+        try {
+          const user = await User.findById(req.params.id);
+          const currentUser = await User.findById(req.body.user);
+          if (user.followers.includes(req.body.user)) {
+            await user.updateOne({ $pull: { followers: req.body.user } });
+            await currentUser.updateOne({ $pull: { followings: req.params.id } });
+            res.status(200).json("User Has Been Unfollowed");
+          } else {
+            res.status(403).json("You Dont Follow This User");
+          }
+        } catch (err) {
+          res.status(500).json(err);
+        }
+      } else {
+        res.status(403).json("You Cant Unfollow Yourself");
       }
 }
 
