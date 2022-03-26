@@ -47,7 +47,8 @@ export const registerUser = async (req,res)=>{
                 followers: newUser.followers,
                 profilePicture: newUser.profilePicture,
                 coverPicture: newUser.coverPicture,
-                isAdmin: newUser.isAdmin
+                isAdmin: newUser.isAdmin,
+                bio: newUser.bio
             });
         }else{
             res.status(400).send("Invalid Data");
@@ -74,7 +75,8 @@ export const loginUser = async (req,res) =>{
                 followers: user.followers,
                 profilePicture: user.profilePicture,
                 coverPicture: user.coverPicture,
-                isAdmin: user.isAdmin
+                isAdmin: user.isAdmin,
+                bio: user.bio
             });
         }else{
             res.status(400).send("Wrong Credentials");
@@ -146,4 +148,22 @@ const generateToken = (id)=>{
     return jwt.sign({id}, process.env.JWT_SECRET, {
         expiresIn:'30d',
     })
+}
+
+export const editProfile = async (req,res)=>{
+    try {
+        const user = await User.findOne({username:req.params.username})
+        if(user){
+            user.first = req.body.first || user.first
+            user.last = req.body.last || user.last
+            user.bio = req.body.bio || user.bio
+            user.profilePicture = req.body.profilePicture || user.profilePicture
+            user.coverPicture = req.body.coverPicture || user.coverPicture
+        }
+        // const updateUser = await user.updateOne({$set:req.body});
+        await user.save()
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json(error)
+    }
 }

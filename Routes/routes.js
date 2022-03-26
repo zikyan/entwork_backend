@@ -1,6 +1,6 @@
 import express from "express";
 import { getAllPost, postRequest, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne } from "../controllers/postController.js";
-import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser } from "../controllers/userController.js";
+import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile } from "../controllers/userController.js";
 import { createJob, getAllJob } from "../controllers/jobController.js";
 import {protect} from "../middleware/authMiddleware.js";
 
@@ -25,6 +25,7 @@ route.post('/users/login',loginUser);
 route.put('/users/follow/:id', followUser);
 route.put('/users/unfollow/:id', unfollowUser);
 route.get('/users/getuserbyusername/:username', getUserByUsername);
+route.put('/users/editprofile/:username', editProfile)
 
 // Job Controller Routes
 
