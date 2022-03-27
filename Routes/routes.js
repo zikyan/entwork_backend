@@ -1,6 +1,7 @@
 import express from "express";
 import { getAllPost, postRequest, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne } from "../controllers/postController.js";
 import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile } from "../controllers/userController.js";
+import { postComment, getComment } from "../controllers/commentController.js";
 import { createJob, getAllJob } from "../controllers/jobController.js";
 import {protect} from "../middleware/authMiddleware.js";
 
@@ -17,6 +18,8 @@ route.get('/post/getuserbyid/:id', getUserById);
 route.get('/post/timeline/:user', timelinePosts);
 route.get('/post/getpostbyid/:id', getPostById);
 route.get('/post/getpostbyidOne/:id', getPostByIdOne);
+route.post('/post/postcomment', postComment);
+route.get('/post/getcomment/:id', getComment);
 
 // User Controller Routes
 

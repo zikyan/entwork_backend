@@ -1,22 +1,19 @@
 import mongoose from "mongoose";
 
-const PostSchema = new mongoose.Schema({
+const CommentSchema = new mongoose.Schema({
     user:{
         type:String,
         required:true,
-        ref:'User'
+        ref:'User',
     },
-    text:{
+    post:{
         type:String,
         required:true,
+        ref:'Post',
     },
-    tag:{
-        type:Array,
-        default:[],
-    },
-    img: {
-        type: String,
-        default:"default.png",
+    commentText:{
+        type:String,
+        required:true
     },
     up: {
         type: Array,
@@ -30,6 +27,6 @@ const PostSchema = new mongoose.Schema({
     {timestamps:true}
 );
 
-const Post = mongoose.model('Post',PostSchema)
+const Comment = mongoose.model('Comment',CommentSchema)
 
-export default Post;
+export default Comment;
