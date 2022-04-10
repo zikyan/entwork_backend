@@ -1,8 +1,8 @@
 import express from "express";
 import { getAllPost, postRequest, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne } from "../controllers/postController.js";
 import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile } from "../controllers/userController.js";
-import { postComment, getComment } from "../controllers/commentController.js";
-import { createJob, getAllJob } from "../controllers/jobController.js";
+import { postComment, getComment, getCommentByUsername } from "../controllers/commentController.js";
+import { createJob, getAllJob, getJobByUser } from "../controllers/jobController.js";
 import {protect} from "../middleware/authMiddleware.js";
 
 const route=express.Router();
@@ -20,6 +20,7 @@ route.get('/post/getpostbyid/:id', getPostById);
 route.get('/post/getpostbyidOne/:id', getPostByIdOne);
 route.post('/post/postcomment', postComment);
 route.get('/post/getcomment/:id', getComment);
+route.get('/post/getcommentbyusername/:username', getCommentByUsername);
 
 // User Controller Routes
 
@@ -34,5 +35,6 @@ route.put('/users/editprofile/:username', editProfile)
 
 route.post('/job/create', createJob);
 route.get('/job/getalljob', getAllJob);
+route.get('/job/getjobbyuser/:id', getJobByUser);
 
 export default route;
