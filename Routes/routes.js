@@ -3,6 +3,7 @@ import { getAllPost, postRequest, updateRequest, deleteRequest, timelinePosts, g
 import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile } from "../controllers/userController.js";
 import { postComment, getComment, getCommentByUsername } from "../controllers/commentController.js";
 import { createJob, getAllJob, getJobByUser } from "../controllers/jobController.js";
+import { postConversation, getConversation, postMessage, getMessage } from "../controllers/chatController.js";
 import {protect} from "../middleware/authMiddleware.js";
 
 const route=express.Router();
@@ -36,5 +37,16 @@ route.put('/users/editprofile/:username', editProfile)
 route.post('/job/create', createJob);
 route.get('/job/getalljob', getAllJob);
 route.get('/job/getjobbyuser/:id', getJobByUser);
+
+// Chat Conversation Controller Routes
+
+route.post('/chat/postconversation', postConversation);
+route.get('/chat/getconversation/:id', getConversation);
+
+// Chat Message Controller Routes
+
+route.post('/chat/postmessage', postMessage);
+route.get('/chat/getmessage/:conversationId', getMessage);
+
 
 export default route;
