@@ -1,7 +1,7 @@
 import express from "express";
-import { getAllPost, postRequest, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne } from "../controllers/postController.js";
-import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile } from "../controllers/userController.js";
-import { postComment, getComment, getCommentByUsername } from "../controllers/commentController.js";
+import { getAllPost, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne, getAllPostAdmin } from "../controllers/postController.js";
+import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile, getAllUser } from "../controllers/userController.js";
+import { postComment, getComment, getCommentByUsername, getAllComment } from "../controllers/commentController.js";
 import { createJob, getAllJob, getJobByUser } from "../controllers/jobController.js";
 import { postConversation, getConversation, postMessage, getMessage } from "../controllers/chatController.js";
 import {protect} from "../middleware/authMiddleware.js";
@@ -19,9 +19,7 @@ route.get('/post/getuserbyid/:id', getUserById);
 route.get('/post/timeline/:user', timelinePosts);
 route.get('/post/getpostbyid/:id', getPostById);
 route.get('/post/getpostbyidOne/:id', getPostByIdOne);
-route.post('/post/postcomment', postComment);
-route.get('/post/getcomment/:id', getComment);
-route.get('/post/getcommentbyusername/:username', getCommentByUsername);
+route.get('/post/getallpostadmin', getAllPostAdmin);
 
 // User Controller Routes
 
@@ -31,6 +29,7 @@ route.put('/users/follow/:id', followUser);
 route.put('/users/unfollow/:id', unfollowUser);
 route.get('/users/getuserbyusername/:username', getUserByUsername);
 route.put('/users/editprofile/:username', editProfile)
+route.get('/users/getalluser', getAllUser);
 
 // Job Controller Routes
 
@@ -47,6 +46,15 @@ route.get('/chat/getconversation/:id', getConversation);
 
 route.post('/chat/postmessage', postMessage);
 route.get('/chat/getmessage/:conversationId', getMessage);
+
+// Comment Controller Routes
+
+route.post('/post/postcomment', postComment);
+route.get('/post/getcomment/:id', getComment);
+route.get('/post/getcommentbyusername/:username', getCommentByUsername);
+route.get('/post/getallcomment', getAllComment);
+
+
 
 
 export default route;

@@ -119,3 +119,12 @@ export const getPostByIdOne = async (req,res)=>{
         res.status(500).json(error);
     }
 }
+
+export const getAllPostAdmin = async (req,res)=>{
+    try {
+        const post = await Post.find()
+        res.status(200).json(post)
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
