@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import route from './routes/routes.js';
 import {connectDb} from './config/connect.js';
-
 import fileUpload from 'express-fileupload';
 
 dotenv.config();

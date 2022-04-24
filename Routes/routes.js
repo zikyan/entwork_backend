@@ -4,6 +4,7 @@ import { registerUser, loginUser, getUserById, followUser, getUserByUsername, un
 import { postComment, getComment, getCommentByUsername, getAllComment } from "../controllers/commentController.js";
 import { createJob, getAllJob, getJobByUser } from "../controllers/jobController.js";
 import { postConversation, getConversation, postMessage, getMessage } from "../controllers/chatController.js";
+import { tweetsData } from "../controllers/twitterController.js";
 import {protect} from "../middleware/authMiddleware.js";
 
 const route=express.Router();
@@ -55,6 +56,7 @@ route.get('/post/getcommentbyusername/:username', getCommentByUsername);
 route.get('/post/getallcomment', getAllComment);
 
 
+route.get('/twitter/get', tweetsData);
 
 
 export default route;
