@@ -14,9 +14,11 @@ const PostSchema = new mongoose.Schema({
         type:Array,
         default:[],
     },
+    category:{
+        type:String,
+    },
     img: {
         type: String,
-        default:"default.png",
     },
     up: {
         type: Array,

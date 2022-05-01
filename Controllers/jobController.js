@@ -12,8 +12,18 @@ export const createJob = async (req,res)=>{
 
 export const getAllJob = async (req,res)=>{
     try {
-        const jobs = await Job.find();
-        res.status(200).json(jobs);
+        if(req.query.tag){
+            const tagJobs = await Job.find({tag:req.query.tag});
+            res.status(200).json(tagJobs);
+        }
+        else if(req.query.category){
+            const categoryJobs = await Job.find({category:req.query.category});
+            res.status(200).json(categoryJobs);
+        }
+        else{
+            const jobs = await Job.find();
+            res.status(200).json(jobs);
+        }
     } catch (error) {
         res.status(400).json(error.message);
     }

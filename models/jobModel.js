@@ -18,6 +18,9 @@ const JobSchema = new mongoose.Schema({
         type:Array,
         default:[],
     },
+    category:{
+        type:String,
+    },
     img: {
         type: String,
     },

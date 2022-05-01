@@ -52,7 +52,8 @@ export const registerUser = async (req,res)=>{
                 profilePicture: newUser.profilePicture,
                 coverPicture: newUser.coverPicture,
                 isAdmin: newUser.isAdmin,
-                bio: newUser.bio
+                bio: newUser.bio,
+                about: newUser.about
             });
         }else{
             res.status(400).send("Invalid Data");
@@ -80,7 +81,8 @@ export const loginUser = async (req,res) =>{
                 profilePicture: user.profilePicture,
                 coverPicture: user.coverPicture,
                 isAdmin: user.isAdmin,
-                bio: user.bio
+                bio: user.bio,
+                about: user.about
             });
         }else{
             res.status(400).send("Wrong Credentials");
@@ -161,6 +163,7 @@ export const editProfile = async (req,res)=>{
             user.first = req.body.first || user.first
             user.last = req.body.last || user.last
             user.bio = req.body.bio || user.bio
+            user.about = req.body.about || user.about
             user.profilePicture = req.body.profilePicture || user.profilePicture
             user.coverPicture = req.body.coverPicture || user.coverPicture
         }

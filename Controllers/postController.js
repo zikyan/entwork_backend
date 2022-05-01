@@ -14,10 +14,15 @@ export const createPost = async (req,res)=>{
 
 export const getAllPost = async (req,res)=>{
     try {
-        if(req.query.category){
-            const categoryPost = await Post.find({tag:req.query.category});
+        if(req.query.tag){
+            const tagPost = await Post.find({tag:req.query.tag});
+            res.status(200).json(tagPost);
+        }
+        else if(req.query.category){
+            const categoryPost = await Post.find({category:req.query.category});
             res.status(200).json(categoryPost);
-        }else{
+        }
+        else{
             const post = await Post.find();
             res.status(200).json(post);
         }
