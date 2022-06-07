@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllPost, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne, getAllPostAdmin } from "../controllers/postController.js";
+import { getAllPost, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne, getAllPostAdmin, deletePost, editPost, sharePost, getSharePost } from "../controllers/postController.js";
 import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile, getAllUser } from "../controllers/userController.js";
 import { postComment, getComment, getCommentByUsername, getAllComment } from "../controllers/commentController.js";
 import { createJob, getAllJob, getJobByUser } from "../controllers/jobController.js";
@@ -21,6 +21,10 @@ route.get('/post/timeline/:user', timelinePosts);
 route.get('/post/getpostbyid/:id', getPostById);
 route.get('/post/getpostbyidOne/:id', getPostByIdOne);
 route.get('/post/getallpostadmin', getAllPostAdmin);
+route.delete('/post/deletepost/:id', deletePost);
+route.put('/post/editpost/:id', editPost);
+route.post('/post/sharepost', sharePost);
+route.get('/post/getsharepost/:id', getSharePost);
 
 // User Controller Routes
 

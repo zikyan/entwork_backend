@@ -1,5 +1,6 @@
 import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
+import Share from '../models/sharedPostModel.js';
 
 export const createPost = async (req,res)=>{
     try {
@@ -131,5 +132,50 @@ export const getAllPostAdmin = async (req,res)=>{
         res.status(200).json(post)
     } catch (error) {
         res.status(500).json(error);
+    }
+}
+
+export const deletePost = async (req,res)=>{
+    try {
+        await Post.deleteOne({_id:req.params.id})
+        res.status(200).json('Post Deleted Successfully');
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+export const editPost = async (req,res)=>{
+    try {
+        const post = await Post.findOne({_id:req.params.id})
+        if(post){
+            post.text = req.body.text || post.text
+            post.tag = req.body.tag || post.tag
+            post.img = req.body.img || post.img
+            post.category = req.body.category || post.category
+        }
+        // const updateUser = await user.updateOne({$set:req.body});
+        await post.save()
+        res.status(200).json(post)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+export const sharePost = async (req,res)=>{
+    try {
+        const newPost = await new Share(req.body)
+        await newPost.save()
+        res.status(200).json(newPost)
+    } catch (error) {
+        res.status(400).json(error.message);
+    }
+}
+
+export const getSharePost = async (req,res)=>{
+    try {
+        const posts = await Share.find({share:req.params.id})
+        res.status(200).json(posts)
+    } catch (error) {
+        res.status(400).json(error.message);
     }
 }
