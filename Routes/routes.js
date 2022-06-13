@@ -1,8 +1,8 @@
 import express from "express";
-import { getAllPost, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne, getAllPostAdmin, deletePost, editPost, sharePost, getSharePost } from "../controllers/postController.js";
+import { getAllPost, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne, getAllPostAdmin, deletePost, editPost, sharePost, getSharePost, savePost, getSavePost, deleteSavedPost } from "../controllers/postController.js";
 import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile, getAllUser } from "../controllers/userController.js";
 import { postComment, getComment, getCommentByUsername, getAllComment } from "../controllers/commentController.js";
-import { createJob, getAllJob, getJobByUser } from "../controllers/jobController.js";
+import { createJob, getAllJob, getJobByUser, saveJob, getSaveJob, deleteSavedJob, deleteJob, getJobById } from "../controllers/jobController.js";
 import { postConversation, getConversation, postMessage, getMessage } from "../controllers/chatController.js";
 import { tweetsData } from "../controllers/twitterController.js";
 import {protect} from "../middleware/authMiddleware.js";
@@ -25,6 +25,9 @@ route.delete('/post/deletepost/:id', deletePost);
 route.put('/post/editpost/:id', editPost);
 route.post('/post/sharepost', sharePost);
 route.get('/post/getsharepost/:id', getSharePost);
+route.post('/post/savepost', savePost);
+route.get('/post/getsavepost/:id', getSavePost);
+route.delete('/post/deletesavedpost/:id', deleteSavedPost);
 
 // User Controller Routes
 
@@ -41,6 +44,11 @@ route.get('/users/getalluser', getAllUser);
 route.post('/job/create', createJob);
 route.get('/job/getalljob', getAllJob);
 route.get('/job/getjobbyuser/:id', getJobByUser);
+route.post('/job/savejob', saveJob);
+route.get('/job/getsavejob/:id', getSaveJob);
+route.delete('/job/deletesavedjob/:id', deleteSavedJob);
+route.delete('/job/deletejob/:id', deleteJob);
+route.get('/job/getjobbyid/:id', getJobById);
 
 // Chat Conversation Controller Routes
 

@@ -1,6 +1,7 @@
 import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
 import Share from '../models/sharedPostModel.js';
+import Saved from '../models/Saved.js';
 
 export const createPost = async (req,res)=>{
     try {
@@ -138,6 +139,7 @@ export const getAllPostAdmin = async (req,res)=>{
 export const deletePost = async (req,res)=>{
     try {
         await Post.deleteOne({_id:req.params.id})
+        await Saved.deleteOne({post:req.params.id})
         res.status(200).json('Post Deleted Successfully');
     } catch (error) {
         res.status(500).json(error);
@@ -177,5 +179,33 @@ export const getSharePost = async (req,res)=>{
         res.status(200).json(posts)
     } catch (error) {
         res.status(400).json(error.message);
+    }
+}
+
+export const savePost = async (req,res)=>{
+    try {
+        const newPost = await new Saved(req.body)
+        await newPost.save()
+        res.status(200).json(newPost)
+    } catch (error) {
+        res.status(400).json(error.message);
+    }
+}
+
+export const getSavePost = async (req,res)=>{
+    try {
+        const posts = await Saved.find({saved:req.params.id})
+        res.status(200).json(posts)
+    } catch (error) {
+        res.status(400).json(error.message);
+    }
+}
+
+export const deleteSavedPost = async (req,res)=>{
+    try {
+        await Saved.deleteOne({_id:req.params.id})
+        res.status(200).json('Post Deleted Successfully');
+    } catch (error) {
+        res.status(500).json(error);
     }
 }
