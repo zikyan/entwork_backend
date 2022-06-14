@@ -15,11 +15,20 @@ const CommentSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    up: {
-        type: Array,
+    report:{
+        type: Number,
+        default:0
+    },
+    reportuser:{
+        type:Array,
+        unique:true,
         default:[],
     },
-    down: {
+    count:{
+        type: Number,
+        default:0
+    },
+    vote: {
         type: Array,
         default:[],
     },

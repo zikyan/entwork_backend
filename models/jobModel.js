@@ -24,6 +24,23 @@ const JobSchema = new mongoose.Schema({
     img: {
         type: String,
     },
+    report:{
+        type: Number,
+        default:0
+    },
+    reportuser:{
+        type:Array,
+        unique:true,
+        default:[],
+    },
+    count:{
+        type: Number,
+        default:0
+    },
+    vote: {
+        type: Array,
+        default:[],
+    }
 },
     {timestamps:true}
 );

@@ -53,7 +53,9 @@ export const registerUser = async (req,res)=>{
                 coverPicture: newUser.coverPicture,
                 isAdmin: newUser.isAdmin,
                 bio: newUser.bio,
-                about: newUser.about
+                about: newUser.about,
+                report: newUser.report,
+                warning: newUser.warning
             });
         }else{
             res.status(400).send("Invalid Data");
@@ -82,7 +84,9 @@ export const loginUser = async (req,res) =>{
                 coverPicture: user.coverPicture,
                 isAdmin: user.isAdmin,
                 bio: user.bio,
-                about: user.about
+                about: user.about,
+                report: user.report,
+                warning: user.warning
             });
         }else{
             res.status(400).send("Wrong Credentials");
@@ -177,7 +181,7 @@ export const editProfile = async (req,res)=>{
 
 export const getAllUser = async (req,res)=>{
     try {
-        const user = await User.find()
+        const user = await User.find().sort({ _id: -1 })
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json(error)

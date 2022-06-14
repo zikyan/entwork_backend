@@ -2,6 +2,7 @@ import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
 import Share from '../models/sharedPostModel.js';
 import Saved from '../models/Saved.js';
+import Comment from '../models/commentModel.js';
 
 export const createPost = async (req,res)=>{
     try {
@@ -17,15 +18,15 @@ export const createPost = async (req,res)=>{
 export const getAllPost = async (req,res)=>{
     try {
         if(req.query.tag){
-            const tagPost = await Post.find({tag:req.query.tag});
+            const tagPost = await Post.find({tag:req.query.tag}).sort({ _id: -1 });
             res.status(200).json(tagPost);
         }
         else if(req.query.category){
-            const categoryPost = await Post.find({category:req.query.category});
+            const categoryPost = await Post.find({category:req.query.category}).sort({ _id: -1 });
             res.status(200).json(categoryPost);
         }
         else{
-            const post = await Post.find();
+            const post = await Post.find().sort({ _id: -1 });
             res.status(200).json(post);
         }
     } catch (error) {
@@ -97,10 +98,10 @@ export const deleteRequest = async (req,res)=>{
 export const timelinePosts = async (req,res)=>{
     try {
         const currentUser = await User.findById(req.params.user);
-        const userPosts = await Post.find({ user: currentUser._id });
+        const userPosts = await Post.find({ user: currentUser._id }).sort({ _id: -1 });
         const friendPosts = await Promise.all(
           currentUser.followings.map((friendId) => {
-            return Post.find({ user: friendId });
+            return Post.find({ user: friendId }).sort({ _id: -1 });
           })
         );
         res.status(200).json(userPosts.concat(...friendPosts));
@@ -111,7 +112,7 @@ export const timelinePosts = async (req,res)=>{
 
 export const getPostById = async (req,res)=>{
     try {
-        const posts = await Post.find({user:req.params.id})
+        const posts = await Post.find({user:req.params.id}).sort({ _id: -1 })
         res.status(200).json(posts)
     } catch (error) {
         res.status(500).json(err);
@@ -127,19 +128,11 @@ export const getPostByIdOne = async (req,res)=>{
     }
 }
 
-export const getAllPostAdmin = async (req,res)=>{
-    try {
-        const post = await Post.find()
-        res.status(200).json(post)
-    } catch (error) {
-        res.status(500).json(error);
-    }
-}
-
 export const deletePost = async (req,res)=>{
     try {
         await Post.deleteOne({_id:req.params.id})
         await Saved.deleteOne({post:req.params.id})
+        await Comment.deleteMany({post:req.params.id})
         res.status(200).json('Post Deleted Successfully');
     } catch (error) {
         res.status(500).json(error);
@@ -175,7 +168,7 @@ export const sharePost = async (req,res)=>{
 
 export const getSharePost = async (req,res)=>{
     try {
-        const posts = await Share.find({share:req.params.id})
+        const posts = await Share.find({share:req.params.id}).sort({ _id: -1 })
         res.status(200).json(posts)
     } catch (error) {
         res.status(400).json(error.message);
@@ -194,7 +187,7 @@ export const savePost = async (req,res)=>{
 
 export const getSavePost = async (req,res)=>{
     try {
-        const posts = await Saved.find({saved:req.params.id})
+        const posts = await Saved.find({saved:req.params.id}).sort({_id:-1})
         res.status(200).json(posts)
     } catch (error) {
         res.status(400).json(error.message);
@@ -205,6 +198,70 @@ export const deleteSavedPost = async (req,res)=>{
     try {
         await Saved.deleteOne({_id:req.params.id})
         res.status(200).json('Post Deleted Successfully');
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+export const reportPost = async (req,res)=>{
+    try {
+        const post = await Post.findById(req.params.id)
+        const rep = post?.report+1
+        await Post.findByIdAndUpdate(req.params.id,{report:rep, $push :{reportuser:req.body.currentUser}})
+        // $push: { followers: req.body.user
+        await User.findByIdAndUpdate(post?.user,{report:rep})
+        // await Post.findByIdAndUpdate(req.params.id,{reportuser:post?.user})
+
+        res.status(200).json("Reported Successfully")
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+export const getReportPost = async (req,res)=>{
+    try {
+        const post = await Post.findById(req.params.id)
+        const rep = post?.report
+        res.status(200).json(rep)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+export const addPostLike = async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.id);
+      if (!post.vote.includes(req.body.userId)) {
+        await post.updateOne({ $push: { vote: req.body.userId } });
+        const voteCount = post?.count+1
+        await post.updateOne({count:voteCount})
+        res.status(200).json("The post has been liked");
+      } else {
+        await post.updateOne({ $pull: { vote: req.body.userId } });
+        const voteCount = post?.count-1
+        await post.updateOne({count:voteCount})
+        res.status(200).json("The post has been disliked");
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+}
+
+export const getPostByCount = async (req,res)=>{
+    try {
+        const post = await Post.find(req.params.count)
+        res.status(200).json(post)
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+export const getTopPost = async (req,res)=>{
+    try {
+        const allposts = await Post.find()
+        let max = allposts?.reduce((voteCount, singlePost) => voteCount = voteCount > singlePost?.count ? voteCount : singlePost?.count, 0);
+        const topPosts = await Post.find({count:max})
+        res.status(200).json(topPosts)
     } catch (error) {
         res.status(500).json(error);
     }

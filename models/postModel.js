@@ -10,6 +10,27 @@ const PostSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    report:{
+        type: Number,
+        default:0
+    },
+    reportuser:{
+        type:Array,
+        unique:true,
+        default:[],
+    },
+    comment:{
+        type: Number,
+        default:0
+    },
+    count:{
+        type: Number,
+        default:0
+    },
+    vote: {
+        type: Array,
+        default:[],
+    },
     tag:{
         type:Array,
         default:[],

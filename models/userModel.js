@@ -23,6 +23,14 @@ const UserSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    report:{
+      type:Number,
+      default:0
+    },
+    warning:{
+      type:Number,
+      default:0
+    },
     profilePicture: {
         type: String,
         default: "",
