@@ -1,7 +1,7 @@
 import express from "express";
 import { getAllPost, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne, deletePost, editPost, sharePost, getSharePost, savePost, getSavePost, deleteSavedPost, reportPost, getReportPost, addPostLike, getPostByCount, getTopPost } from "../controllers/postController.js";
 import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile, getAllUser } from "../controllers/userController.js";
-import { postComment, getComment, getCommentByUsername, getAllComment, reportComment, getCommentByPostId, addCommentLike } from "../controllers/commentController.js";
+import { postComment, getComment, getCommentByUsername, getAllComment, reportComment, getCommentByPostId, addCommentLike, getTopComment } from "../controllers/commentController.js";
 import { createJob, getAllJob, getJobByUser, saveJob, getSaveJob, deleteSavedJob, deleteJob, getJobById, editJob, reportJob, addJobLike } from "../controllers/jobController.js";
 import { postConversation, getConversation, postMessage, getMessage } from "../controllers/chatController.js";
 import { deleteUser, deleteComment, getAllJobAdmin, getAllPostAdmin, userWarning } from "../controllers/adminController.js";
@@ -82,6 +82,7 @@ route.get('/post/getallcomment', getAllComment)
 route.put('/post/reportcomment/:id', reportComment)
 route.get('/post/getcommentbypostid/:id', getCommentByPostId);
 route.put('/post/addcommentlike/:id', addCommentLike)
+route.get('/post/gettopcomment', getTopComment);
 
 // Twitter Route
 

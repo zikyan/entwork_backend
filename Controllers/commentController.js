@@ -85,3 +85,14 @@ export const addCommentLike = async (req, res) => {
       res.status(500).json(err);
     }
 }
+
+export const getTopComment = async (req,res)=>{
+    try {
+        const allComments = await Comment.find()
+        let max = allComments?.reduce((voteCount, singleComment) => voteCount = voteCount > singleComment?.count ? voteCount : singleComment?.count, 0);
+        const topComments = await Comment.find({count:max})
+        res.status(200).json(topComments)
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
