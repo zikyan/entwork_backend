@@ -3,6 +3,7 @@ import User from '../models/userModel.js';
 import Share from '../models/sharedPostModel.js';
 import Saved from '../models/Saved.js';
 import Comment from '../models/commentModel.js';
+import ContentBasedRecommender from 'content-based-recommender';
 
 export const createPost = async (req,res)=>{
     try {
@@ -264,5 +265,47 @@ export const getTopPost = async (req,res)=>{
         res.status(200).json(topPosts)
     } catch (error) {
         res.status(500).json(error);
+    }
+}
+
+export const getRecommendedPost = async (req,res)=>{
+    const recommender = new ContentBasedRecommender({
+        minScore: 0.1,
+        maxSimilarDocuments: 100
+      });
+    try {
+        const allPosts = await Post.find({user:id})
+        const id=allPosts?._id
+        recommender.train(allPosts);
+        const similarDocuments = recommender.getSimilarDocuments(id, 0, 10);
+        const currentUser = await User.findById(req.params.user);
+        const userPosts = await Post.find({ user: currentUser._id }).sort({ _id: -1 });
+        const friendPosts = await Promise.all(
+          currentUser.followings.map((friendId) => {
+            return Post.find({ user: friendId }).sort({ _id: -1 });
+          })
+        );
+        res.status(200).json(userPosts.concat(...friendPosts));
+
+        
+        res.status(200).json(similarDocuments)
+    } catch (error) {
+        res.status(400).json(error.message);
+    }
+}
+
+export const getWeeklyWinner = async (req,res)=>{
+    try {
+        var topPosts=[]
+        const allPosts = await Post.find()
+        let max = allPosts?.reduce((voteCount, singlePost) => voteCount = voteCount > singlePost?.count ? voteCount : singlePost?.count, 0);
+        for (let i = 0; i < 10; i++){
+            if(max-i>0){
+                topPosts[i] = await Post.find({count:max-i})
+            }
+        }
+        res.status(200).json(topPosts)
+    } catch (error) {
+        res.status(400).json(error.message)
     }
 }

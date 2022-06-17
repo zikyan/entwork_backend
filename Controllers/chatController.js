@@ -4,14 +4,25 @@ import Message from '../models/Message.js';
 // Conversation Controller
 
 export const postConversation = async (req,res) => {
-    const newConversation = new Conversation({
-        members: [req.body.senderId, req.body.receiverId],
+   var check = false
+    const allCon = await Conversation.find()
+    allCon?.map((mem)=>{
+        if(mem?.members[1].includes(req.body.receiverId)){
+            check=true
+        }
+        // else{
+        //     check=false
+        //     console.log('false')
+        // }
     })
-    try {
-        const savedConversation = await newConversation.save()
-        res.status(200).json(savedConversation)
-    } catch (error) {
-        res.status(500).json(error.message)
+    if(check===false){
+        const newConversation = new Conversation({
+            members: [req.body.senderId, req.body.receiverId],
+        })
+            const savedConversation = await newConversation.save()
+            res.status(200).json(savedConversation)
+    }else{
+        console.log('error')
     }
 }
 
@@ -20,6 +31,15 @@ export const getConversation = async (req,res) => {
         const conversation = await Conversation.find({
             members: {$in: [req.params.id]}
         })
+        res.status(200).json(conversation)
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
+export const getAllConversation = async (req,res) => {
+    try {
+        const conversation = await Conversation.find()
         res.status(200).json(conversation)
     } catch (error) {
         res.status(500).json(error.message)
