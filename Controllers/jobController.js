@@ -80,7 +80,17 @@ export const deleteJob = async (req,res)=>{
 
 export const getJobById = async (req,res)=>{
     try {
+       
         const jobs = await Job.findOne({_id:req.params.id});
+        res.status(200).json(jobs);
+    } catch (error) {
+        res.status(400).json(error.message);
+    }
+}
+
+export const getJobByIdSaved = async (req,res)=>{
+    try {
+        const jobs = await SavedJob.findOne({_id:req.params.id});
         res.status(200).json(jobs);
     } catch (error) {
         res.status(400).json(error.message);
@@ -132,5 +142,17 @@ export const addJobLike = async (req, res) => {
       }
     } catch (err) {
       res.status(500).json(err);
+    }
+}
+
+export const getThreeJob = async (req,res)=>{
+    try {
+        const jobs = await Job.find().sort({ _id: -1 });
+        for(var i=0; i<3; i++){
+            var sliced = jobs.slice(0, i+1);
+          }
+        res.status(200).json(sliced);
+    } catch (error) {
+        res.status(400).json(error.message);
     }
 }

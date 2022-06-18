@@ -12,6 +12,7 @@ const ShareSchema = new mongoose.Schema({
     },
     post:{
         type:String,
+        unique:true,
         required:true,
     },
     text:{

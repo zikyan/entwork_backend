@@ -268,6 +268,17 @@ export const getTopPost = async (req,res)=>{
     }
 }
 
+export const getRecommendedPostOne = async (req,res)=>{
+    try {
+        const allposts = await Post.find()
+        let max = allposts?.reduce((voteCount, singlePost) => voteCount = voteCount < singlePost?.count ? voteCount : singlePost?.count, 0);
+        const topPosts = await Post.find({count:max})
+        res.status(200).json(topPosts)
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
 export const getRecommendedPost = async (req,res)=>{
     const recommender = new ContentBasedRecommender({
         minScore: 0.1,
@@ -307,5 +318,14 @@ export const getWeeklyWinner = async (req,res)=>{
         res.status(200).json(topPosts)
     } catch (error) {
         res.status(400).json(error.message)
+    }
+}
+
+export const getPostByText = async (req,res)=>{
+    try {
+        const allposts = await Post.find({text:'google'})
+        res.status(200).json(allposts)
+    } catch (error) {
+        res.status(500).json(error);
     }
 }

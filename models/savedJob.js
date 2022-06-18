@@ -12,6 +12,7 @@ const SavedJobSchema = new mongoose.Schema({
     },
     job:{
         type:String,
+        unique:true,
         required:true,
     },
     caption:{

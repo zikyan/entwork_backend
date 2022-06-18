@@ -1,8 +1,8 @@
 import express from "express";
-import { getAllPost, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne, deletePost, editPost, sharePost, getSharePost, savePost, getSavePost, deleteSavedPost, reportPost, getReportPost, addPostLike, getPostByCount, getTopPost, getRecommendedPost, getWeeklyWinner } from "../controllers/postController.js";
+import { getAllPost, updateRequest, deleteRequest, timelinePosts, getPostById, createPost, getPostByIdOne, deletePost, editPost, sharePost, getSharePost, savePost, getSavePost, deleteSavedPost, reportPost, getReportPost, addPostLike, getPostByCount, getTopPost, getRecommendedPost, getWeeklyWinner, getPostByText, getRecommendedPostOne } from "../controllers/postController.js";
 import { registerUser, loginUser, getUserById, followUser, getUserByUsername, unfollowUser, editProfile, getAllUser } from "../controllers/userController.js";
 import { postComment, getComment, getCommentByUsername, getAllComment, reportComment, getCommentByPostId, addCommentLike, getTopComment } from "../controllers/commentController.js";
-import { createJob, getAllJob, getJobByUser, saveJob, getSaveJob, deleteSavedJob, deleteJob, getJobById, editJob, reportJob, addJobLike } from "../controllers/jobController.js";
+import { createJob, getAllJob, getJobByUser, saveJob, getSaveJob, deleteSavedJob, deleteJob, getJobById, editJob, reportJob, addJobLike, getThreeJob, getJobByIdSaved } from "../controllers/jobController.js";
 import { postConversation, getConversation, postMessage, getMessage, getAllConversation } from "../controllers/chatController.js";
 import { deleteUser, deleteComment, getAllJobAdmin, getAllPostAdmin, userWarning } from "../controllers/adminController.js";
 import { tweetsData } from "../controllers/twitterController.js";
@@ -24,6 +24,7 @@ route.get('/post/getuserbyid/:id', getUserById);
 route.get('/post/timeline/:user', timelinePosts);
 route.get('/post/getpostbyid/:id', getPostById);
 route.get('/post/getpostbyidOne/:id', getPostByIdOne);
+route.get('/post/getpostbytext', getPostByText);
 
 route.delete('/post/deletepost/:id', deletePost);
 route.put('/post/editpost/:id', editPost);
@@ -42,6 +43,7 @@ route.get('/post/getpostbycount/:count', getPostByCount);
 route.get('/post/gettoppost', getTopPost);
 route.get('/post/getrecommendedpost/:id', getRecommendedPost);
 route.get('/post/getWeeklyWinner', getWeeklyWinner);
+route.get('/post/getrecommendedpostone', getRecommendedPostOne);
 
 // User Controller Routes
 
@@ -63,9 +65,11 @@ route.get('/job/getsavejob/:id', getSaveJob);
 route.delete('/job/deletesavedjob/:id', deleteSavedJob);
 route.delete('/job/deletejob/:id', deleteJob);
 route.get('/job/getjobbyid/:id', getJobById);
+route.get('/job/getjobbyid/:id', getJobByIdSaved);
 route.put('/job/editjob/:id', editJob);
 route.put('/job/reportjob/:id', reportJob)
 route.put('/job/addjoblike/:id', addJobLike)
+route.get('/job/getthreejob', getThreeJob);
 
 // Chat Conversation Controller Routes
 
