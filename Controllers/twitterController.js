@@ -11,7 +11,7 @@ var client = new Twitter({
 
   export const tweetsData = async (req,res)=>{
     try {
-        var params={screen_name:'MemesOfPakistan'}
+        var params={screen_name:'The_Pakistan_Vi'}
         await client.get('https://api.twitter.com/1.1/statuses/user_timeline.json?', params, function(error, tweets, response) {
             return res.status(200).json(tweets);
         });

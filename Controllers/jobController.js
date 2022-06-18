@@ -156,3 +156,20 @@ export const getThreeJob = async (req,res)=>{
         res.status(400).json(error.message);
     }
 }
+
+export const getRecommendedJob = async (req,res)=>{
+    try {
+        const allposts = await Job.find()
+        var topPosts=[]
+        allposts.map((item)=>{
+            if(item?.count<5){
+                topPosts.push(item)
+            }
+        })
+        // let max = allposts?.reduce((voteCount, singlePost) => voteCount = voteCount < singlePost?.count ? voteCount : singlePost?.count, 5);
+        // const topPosts = await Job.find({count:max})
+        res.status(200).json(topPosts)
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}

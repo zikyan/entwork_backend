@@ -4,6 +4,7 @@ import Share from '../models/sharedPostModel.js';
 import Saved from '../models/Saved.js';
 import Comment from '../models/commentModel.js';
 import ContentBasedRecommender from 'content-based-recommender';
+import Follow from '../models/followModel.js';
 
 export const createPost = async (req,res)=>{
     try {
@@ -96,10 +97,25 @@ export const deleteRequest = async (req,res)=>{
     }
 }
 
+// export const timelinePosts = async (req,res)=>{
+//     try {
+//         const currentUser = await User.findById(req.params.user);
+//         const userPosts = await Post.find({ user: currentUser._id }).sort({ _id: -1 });
+//         const friendPosts = await Promise.all(
+//           currentUser.followings.map((friendId) => {
+//             return Post.find({ user: friendId }).sort({ _id: -1 });
+//           })
+//         );
+//         res.status(200).json(userPosts.concat(...friendPosts));
+//       } catch (err) {
+//         res.status(500).json(err);
+//       }
+// }
+
 export const timelinePosts = async (req,res)=>{
     try {
-        const currentUser = await User.findById(req.params.user);
-        const userPosts = await Post.find({ user: currentUser._id }).sort({ _id: -1 });
+        const currentUser = await Follow.findOne({user:req.params.user});
+        const userPosts = await Post.find({ user: currentUser.user }).sort({ _id: -1 });
         const friendPosts = await Promise.all(
           currentUser.followings.map((friendId) => {
             return Post.find({ user: friendId }).sort({ _id: -1 });
@@ -271,8 +287,14 @@ export const getTopPost = async (req,res)=>{
 export const getRecommendedPostOne = async (req,res)=>{
     try {
         const allposts = await Post.find()
-        let max = allposts?.reduce((voteCount, singlePost) => voteCount = voteCount < singlePost?.count ? voteCount : singlePost?.count, 0);
-        const topPosts = await Post.find({count:max})
+        var topPosts=[]
+        allposts.map((item)=>{
+            if(item?.count<5){
+                topPosts.push(item)
+            }
+        })
+        // let max = allposts?.reduce((voteCount, singlePost) => voteCount = voteCount < singlePost?.count ? voteCount : singlePost?.count, 5);
+        // const topPosts = await Job.find({count:max})
         res.status(200).json(topPosts)
     } catch (error) {
         res.status(500).json(error);

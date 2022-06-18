@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from 'bcryptjs';
 import User from "../models/userModel.js";
+import Follow from "../models/followModel.js";
 
 
 export const registerUser = async (req,res)=>{
@@ -182,6 +183,160 @@ export const editProfile = async (req,res)=>{
 export const getAllUser = async (req,res)=>{
     try {
         const user = await User.find().sort({ _id: -1 })
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+export const followUserOne = async (req,res)=>{
+    if (req.body.user !== req.params.id) {
+        try {
+            const find = await Follow.find()
+            var check1 = 0
+            var check2 = 0
+            find?.map((item)=>{
+                if (item?.user.includes(req.params.id)){
+                    check1=1
+                }
+                else if (item?.user.includes(req.body.user)){
+                    check2=2
+                }
+            })
+            if(check2===0){
+                const newUser = await new Follow({
+                    user:req.body.user,
+                    // followings: req.params.id
+                })
+                await newUser.save()
+            }
+            else if(check1===0){
+                const newUser = await new Follow({
+                    user:req.params.id,
+                    // followers: req.body.user
+                })
+                await newUser.save()
+            }
+            
+                const user = await Follow.findOne({user:req.params.id});
+             
+                const currentUser = await Follow.findOne({user:req.body.user});
+
+        
+                
+                if (user?.followers.includes(req.body.user)) {
+                    res.status(403).json("You Already Follow This User");
+                } else {
+                    
+                    await user.updateOne({ $push: { followers: req.body.user } });
+                    await currentUser.updateOne({ $push: { followings: req.params.id } });
+                    res.status(200).json("User Has Been Followed");
+                }
+            
+
+                
+        } catch (err) {
+          res.status(500).json(err);
+        }
+      } else {
+        res.status(403).json("You Can't Follow Yourself");
+      }
+}
+
+export const unFollowUserOne = async (req,res)=>{
+    if (req.body.user !== req.params.id) {
+        try {
+            const find = await Follow.find()
+            var check1 = 0
+            var check2 = 0
+            find?.map((item)=>{
+                if (item?.user.includes(req.params.id)){
+                    check1=1
+                }
+                else if (item?.user.includes(req.body.user)){
+                    check2=2
+                }
+            })
+            if(check2===0){
+                const newUser = await new Follow({
+                    user:req.body.user,
+                    followings: req.params.id
+                })
+                await newUser.save()
+            }
+            else if(check1===0){
+                const newUser = await new Follow({
+                    user:req.params.id,
+                    followers: req.body.user
+                })
+                await newUser.save()
+            }
+                const user = await Follow.findOne({user:req.params.id});
+           
+                const currentUser = await Follow.findOne({user:req.body.user});
+
+                if (!user?.followers.includes(req.body.user)) {
+                    res.status(403).json("You Already Follow This User");
+                    
+                } else {
+                    
+                    await user.updateOne({ $pull: { followers: req.body.user } });
+                    await currentUser.updateOne({ $pull: { followings: req.params.id } });
+                    res.status(200).json("User Has Been Followed");
+                }
+            
+
+                
+        } catch (err) {
+          res.status(500).json(err);
+        }
+      } else {
+        res.status(403).json("You Can't Follow Yourself");
+      }
+}
+
+// export const unfollowUserOne = async (req,res)=>{
+//     if (req.body.user !== req.params.id) {
+//         try {
+//           const user = await User.findById(req.params.id);
+//           const currentUser = await User.findById(req.body.user);
+//           if (user.followers.includes(req.body.user)) {
+//             await user.updateOne({ $pull: { followers: req.body.user } });
+//             await currentUser.updateOne({ $pull: { followings: req.params.id } });
+//             res.status(200).json("User Has Been Unfollowed");
+//           } else {
+//             res.status(403).json("You Dont Follow This User");
+//           }
+//         } catch (err) {
+//           res.status(500).json(err);
+//         }
+//       } else {
+//         res.status(403).json("You Cant Unfollow Yourself");
+//       }
+// }
+
+export const checkFollow = async (req,res)=>{
+    try {
+        const user = await Follow.findOne({user:req.params.id})
+        res.status(200).json(user)
+        
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+export const getUserByFollow = async (req,res)=>{
+    try {
+        const user = await Follow.findOne({user:req.params.id})
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+export const getUserByFollowFriend = async (req,res)=>{
+    try {
+        const user = await Follow.findOne({user:req.params.id})
         res.status(200).json(user)
     } catch (error) {
         res.status(500).json(error)

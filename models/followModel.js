@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
 const FollowSchema = mongoose.Schema({
-    first:{
-        type:String,
-        required:true
-  },
-    last:{
-        type:String,
-        required:true
-  },
-    username:{
+    user:{
         type:String,
         unique:true,
         required:true
+  },
+    followers: {
+        type: Array,
+        default: [],
+    },
+    followings: {
+        type: Array,
+        default: [],
     },
 },
 {timestamps:true}
